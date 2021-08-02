@@ -26,7 +26,7 @@
 # Author:             Pagliacii
 # Last Modified By:   Pagliacii
 # Created Date:       2021-08-02 10:51:53
-# Last Modified Date: 2021-08-02 11:41:40
+# Last Modified Date: 2021-08-02 22:48:58
 
 import random
 import sys
@@ -38,7 +38,10 @@ class Simulator:
     """A simulator to simlate the Langton's ant behaviors."""
 
     def __init__(self, row: int = 16, column: int = 32, fps: int = 24) -> None:
-        self._ant_pos: Tuple[int] = (random.randint(0, row), random.randint(0, column))
+        self._ant_pos: Tuple[int] = (
+            random.randint(0, row - 1),
+            random.randint(0, column - 1),
+        )
         # 0 for N, 1 for W, 2 for S, 3 for E
         self._ant_direction: int = random.randint(0, 4)
         self._row = row
@@ -46,19 +49,14 @@ class Simulator:
         self._delta = 10 ** 9 // fps
         self._plane = self._new_plane()
 
+        # Uses emoji to draw the plane
+        self._black_cell = "\N{White Large Square}"
+        self._white_cell = "\N{Black Large Square}"
+        self._ant = "\N{Ant}"
+
     def _new_plane(self) -> list[list[int]]:
         """Creates a new empty plane."""
         return [["white" for _ in range(self._column)] for _ in range(self._row)]
-
-    def _get_ant_direction(self) -> str:
-        if self._ant_direction == 0:
-            return "^"
-        elif self._ant_direction == 1:
-            return "<"
-        elif self._ant_direction == 2:
-            return "v"
-        else:
-            return ">"
 
     def _move_forward(self) -> None:
         row, column = self._ant_pos
@@ -73,15 +71,14 @@ class Simulator:
 
     def _draw(self) -> None:
         """Draws the current plane."""
-        self._erase()
         for row in range(self._row):
             for column in range(self._column):
                 if (row, column) == self._ant_pos:
-                    sys.stdout.write(self._get_ant_direction())
+                    sys.stdout.write(self._ant)
                 elif self._plane[row][column] == "white":
-                    sys.stdout.write(" ")
+                    sys.stdout.write(self._white_cell)
                 elif self._plane[row][column] == "black":
-                    sys.stdout.write("*")
+                    sys.stdout.write(self._black_cell)
                 sys.stdout.flush()
             sys.stdout.write("\n")
             sys.stdout.flush()
@@ -126,6 +123,7 @@ class Simulator:
                 elif toc - tic < self._delta:
                     # Keeps waiting
                     continue
+                self._erase()
                 # Draws the current plane.
                 self._draw()
                 # Generates the next plane.
@@ -137,5 +135,5 @@ class Simulator:
 
 
 if __name__ == "__main__":
-    simulator = Simulator(row=24, column=64, fps=120)
+    simulator = Simulator(row=22, column=54, fps=2)
     simulator.run()
