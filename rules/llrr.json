@@ -1,0 +1,23 @@
+{
+    "default": "white",
+    "white": {
+        "symbol": "\u2b1b",
+        "turn": "right",
+        "flip": "red"
+    },
+    "red": {
+        "symbol": "\ud83d\udfea",
+        "turn": "left",
+        "flip": "green"
+    },
+    "blue": {
+        "symbol": "\ud83d\udfe6",
+        "turn": "left",
+        "flip": "white"
+    },
+    "green": {
+        "symbol": "\ud83d\udfe9",
+        "turn": "left",
+        "flip": "blue"
+    }
+}
