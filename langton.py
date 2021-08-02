@@ -26,18 +26,21 @@
 # Author:             Pagliacii
 # Last Modified By:   Pagliacii
 # Created Date:       2021-08-02 10:51:53
-# Last Modified Date: 2021-08-02 22:48:58
+# Last Modified Date: 2021-08-02 23:54:35
 
+import json
 import random
 import sys
 import time
+
+from pathlib import Path
 from typing import Tuple
 
 
 class Simulator:
     """A simulator to simlate the Langton's ant behaviors."""
 
-    def __init__(self, row: int = 16, column: int = 32, fps: int = 24) -> None:
+    def __init__(self, rules, row: int = 16, column: int = 32, fps: int = 24) -> None:
         self._ant_pos: Tuple[int] = (
             random.randint(0, row - 1),
             random.randint(0, column - 1),
@@ -47,16 +50,20 @@ class Simulator:
         self._row = row
         self._column = column
         self._delta = 10 ** 9 // fps
-        self._plane = self._new_plane()
 
         # Uses emoji to draw the plane
-        self._black_cell = "\N{White Large Square}"
-        self._white_cell = "\N{Black Large Square}"
         self._ant = "\N{Ant}"
+        self._rules = rules
+        self._default_cell = rules["default"]
+
+        # Prepares the init-plane
+        self._plane = self._new_plane()
 
     def _new_plane(self) -> list[list[int]]:
         """Creates a new empty plane."""
-        return [["white" for _ in range(self._column)] for _ in range(self._row)]
+        return [
+            [self._default_cell for _ in range(self._column)] for _ in range(self._row)
+        ]
 
     def _move_forward(self) -> None:
         row, column = self._ant_pos
@@ -75,10 +82,9 @@ class Simulator:
             for column in range(self._column):
                 if (row, column) == self._ant_pos:
                     sys.stdout.write(self._ant)
-                elif self._plane[row][column] == "white":
-                    sys.stdout.write(self._white_cell)
-                elif self._plane[row][column] == "black":
-                    sys.stdout.write(self._black_cell)
+                else:
+                    rule = self._rules[self._plane[row][column]]
+                    sys.stdout.write(rule["symbol"])
                 sys.stdout.flush()
             sys.stdout.write("\n")
             sys.stdout.flush()
@@ -100,14 +106,12 @@ class Simulator:
 
     def _next_plane(self) -> None:
         """Generates the next plane based on two simple rules."""
-        if self._plane[self._ant_pos[0]][self._ant_pos[1]] == "white":
-            # At a white square, turn 90° clockwise, flip the color of the square.
-            self._plane[self._ant_pos[0]][self._ant_pos[1]] = "black"
-            self._ant_direction = (self._ant_direction - 1) % 4
-        else:
-            # At a black square, turn 90° counter-clockwise, flip the color of the square.
-            self._plane[self._ant_pos[0]][self._ant_pos[1]] = "white"
+        rule = self._rules[self._plane[self._ant_pos[0]][self._ant_pos[1]]]
+        self._plane[self._ant_pos[0]][self._ant_pos[1]] = rule["flip"]
+        if rule["turn"] == "left":
             self._ant_direction = (self._ant_direction + 1) % 4
+        else:
+            self._ant_direction = (self._ant_direction - 1) % 4
         # Move forward one unit
         self._move_forward()
 
@@ -135,5 +139,24 @@ class Simulator:
 
 
 if __name__ == "__main__":
-    simulator = Simulator(row=22, column=54, fps=2)
+    fps = 2
+    if len(sys.argv) < 2:
+        rules_file = Path.cwd() / "rules/origin.json"
+    elif len(sys.argv) == 2:
+        rules_file = Path(sys.argv[-1])
+    elif len(sys.argv) == 3:
+        rules_file = Path(sys.argv[-2])
+        fps = int(sys.argv[-1])
+    else:
+        sys.stderr.write("\N{Cross Mark} \033[31mToo more arguments.\033[0m\n")
+        sys.stderr.flush()
+        sys.stdout.write(
+            f"Usage: {sys.argv[0]} [rules_file=./rules/origin.json] [fps=2]\n"
+        )
+        sys.stdout.flush()
+        sys.exit(1)
+
+    with rules_file.open("r") as f:
+        rules = json.load(f)
+    simulator = Simulator(rules, row=22, column=54, fps=fps)
     simulator.run()

@@ -1,0 +1,13 @@
+{
+    "default": "white",
+    "white": {
+        "symbol": "\u2b1b",
+        "turn": "right",
+        "flip": "black"
+    },
+    "black": {
+        "symbol": "\u2b1c",
+        "turn": "left",
+        "flip": "white"
+    }
+}
