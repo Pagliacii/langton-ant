@@ -16,3 +16,7 @@ $ git clone https://github.com/Pagliacii/langton-ant
 $ cd langton-ant
 $ python langton.py
 ```
+
+## Screencast
+
+![screencast](assets/langton-ant.gif)
