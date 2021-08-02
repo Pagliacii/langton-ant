@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "Langton's Ant"
+version = "0.1.0"
+description = "Langton's ant is a two-dimensional universal Turing machine with a very simple set of rules but complex emergent behavior."
+authors = ["Pagliacii <huangmianrui0310@outlook.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
