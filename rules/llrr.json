@@ -3,11 +3,11 @@
     "white": {
         "symbol": "\u2b1b",
         "turn": "right",
-        "flip": "red"
+        "flip": "purple"
     },
-    "red": {
+    "purple": {
         "symbol": "\ud83d\udfea",
-        "turn": "left",
+        "turn": "right",
         "flip": "green"
     },
     "blue": {
