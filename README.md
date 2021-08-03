@@ -20,3 +20,7 @@ $ python langton.py
 ## Screencast
 
 ![screencast](assets/langton-ant.gif)
+
+## Highway Pattern
+
+![highway](assets/highway.png)
