@@ -26,7 +26,7 @@
 # Author:             Pagliacii
 # Last Modified By:   Pagliacii
 # Created Date:       2021-08-02 10:51:53
-# Last Modified Date: 2021-08-03 09:26:42
+# Last Modified Date: 2021-08-03 09:33:39
 
 import json
 import random
@@ -95,8 +95,17 @@ class Simulator:
         sys.stdout.flush()
 
     def _reset_cursor(self) -> None:
-        """Moves the cursot to top-left corner"""
+        """Moves the cursor to top-left corner"""
         sys.stdout.write("\033[H")
+        sys.stdout.flush()
+
+    def _hide_cursor(self) -> None:
+        """Hides the cursor"""
+        sys.stdout.write("\033[?25l")
+        sys.stdout.flush()
+
+    def _show_cursor(self) -> None:
+        sys.stdout.write("\033[?25h")
         sys.stdout.flush()
 
     def _next_plane(self) -> None:
@@ -114,6 +123,7 @@ class Simulator:
     def run(self) -> None:
         """Starts this simulator"""
         self._erase()
+        self._hide_cursor()
         tic: int = 0
         while True:
             try:
@@ -132,6 +142,7 @@ class Simulator:
                 # Updates the tic time.
                 tic = time.perf_counter_ns()
             except KeyboardInterrupt:
+                self._show_cursor()
                 break
 
 
