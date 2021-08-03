@@ -26,7 +26,7 @@
 # Author:             Pagliacii
 # Last Modified By:   Pagliacii
 # Created Date:       2021-08-02 10:51:53
-# Last Modified Date: 2021-08-03 09:33:39
+# Last Modified Date: 2021-08-03 10:48:16
 
 import json
 import random
@@ -125,6 +125,7 @@ class Simulator:
         self._erase()
         self._hide_cursor()
         tic: int = 0
+        steps: int = 0
         while True:
             try:
                 toc: int = time.perf_counter_ns()
@@ -139,6 +140,8 @@ class Simulator:
                 self._draw()
                 # Generates the next plane.
                 self._next_plane()
+                print(f"{steps=}")
+                steps += 1
                 # Updates the tic time.
                 tic = time.perf_counter_ns()
             except KeyboardInterrupt:
@@ -148,14 +151,16 @@ class Simulator:
 
 if __name__ == "__main__":
     fps = 2
-    if len(sys.argv) < 2:
-        rules_file = Path.cwd() / "rules/origin.json"
-    elif len(sys.argv) == 2:
-        rules_file = Path(sys.argv[-1])
+    rules_file = Path.cwd() / "rules/origin.json"
+    if len(sys.argv) == 2:
+        try:
+            fps = int(sys.argv[-1])
+        except:
+            rules_file = Path(sys.argv[-1])
     elif len(sys.argv) == 3:
         rules_file = Path(sys.argv[-2])
         fps = int(sys.argv[-1])
-    else:
+    elif len(sys.argv) > 3:
         sys.stderr.write("\N{Cross Mark} \033[31mToo more arguments.\033[0m\n")
         sys.stderr.flush()
         sys.stdout.write(
@@ -166,5 +171,5 @@ if __name__ == "__main__":
 
     with rules_file.open("r") as f:
         rules = json.load(f)
-    simulator = Simulator(rules, row=36, column=64, fps=fps)
+    simulator = Simulator(rules, row=38, column=86, fps=fps)
     simulator.run()
