@@ -1,0 +1,48 @@
+{
+    "default": "white",
+    "white": {
+        "symbol": "\u2b1b",
+        "turn": "left",
+        "flip": "black"
+    },
+    "black": {
+        "symbol": "\u2b1c",
+        "turn": "right",
+        "flip": "purple"
+    },
+    "purple": {
+        "symbol": "\ud83d\udfea",
+        "turn": "right",
+        "flip": "green"
+    },
+    "green": {
+        "symbol": "\ud83d\udfe9",
+        "turn": "right",
+        "flip": "blue"
+    },
+    "blue": {
+        "symbol": "\ud83d\udfe6",
+        "turn": "right",
+        "flip": "yellow"
+    },
+    "yellow": {
+        "symbol": "\ud83d\udfe8",
+        "turn": "right",
+        "flip": "orange"
+    },
+    "orange": {
+        "symbol": "\ud83d\udfe7",
+        "turn": "left",
+        "flip": "brown"
+    },
+    "brown": {
+        "symbol": "\ud83d\udfeb",
+        "turn": "left",
+        "flip": "red"
+    },
+    "red": {
+        "symbol": "\ud83d\udfe5",
+        "turn": "right",
+        "flip": "white"
+    }
+}
