@@ -26,7 +26,7 @@
 # Author:             Pagliacii
 # Last Modified By:   Pagliacii
 # Created Date:       2021-08-02 10:51:53
-# Last Modified Date: 2021-08-02 23:54:35
+# Last Modified Date: 2021-08-03 09:26:42
 
 import json
 import random
@@ -90,24 +90,20 @@ class Simulator:
             sys.stdout.flush()
 
     def _erase(self) -> None:
-        """Erases the existed plane"""
-        for _ in range(self._row):
-            self._erase_one_row()
-            # Go to the end of previous row
-            sys.stdout.write("\033[A")
-            sys.stdout.flush()
-        sys.stdout.write("\r")
+        """Erases all existed characters"""
+        sys.stdout.write("\033[2J")
         sys.stdout.flush()
 
-    def _erase_one_row(self) -> None:
-        """Erases one row on the plane"""
-        sys.stdout.write("\033[2K")
+    def _reset_cursor(self) -> None:
+        """Moves the cursot to top-left corner"""
+        sys.stdout.write("\033[H")
         sys.stdout.flush()
 
     def _next_plane(self) -> None:
         """Generates the next plane based on two simple rules."""
-        rule = self._rules[self._plane[self._ant_pos[0]][self._ant_pos[1]]]
-        self._plane[self._ant_pos[0]][self._ant_pos[1]] = rule["flip"]
+        row, column = self._ant_pos
+        rule = self._rules[self._plane[row][column]]
+        self._plane[row][column] = rule["flip"]
         if rule["turn"] == "left":
             self._ant_direction = (self._ant_direction + 1) % 4
         else:
@@ -117,6 +113,7 @@ class Simulator:
 
     def run(self) -> None:
         """Starts this simulator"""
+        self._erase()
         tic: int = 0
         while True:
             try:
@@ -127,7 +124,7 @@ class Simulator:
                 elif toc - tic < self._delta:
                     # Keeps waiting
                     continue
-                self._erase()
+                self._reset_cursor()
                 # Draws the current plane.
                 self._draw()
                 # Generates the next plane.
@@ -158,5 +155,5 @@ if __name__ == "__main__":
 
     with rules_file.open("r") as f:
         rules = json.load(f)
-    simulator = Simulator(rules, row=22, column=54, fps=fps)
+    simulator = Simulator(rules, row=36, column=64, fps=fps)
     simulator.run()
